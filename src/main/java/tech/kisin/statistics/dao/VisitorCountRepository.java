@@ -1,11 +1,15 @@
 package tech.kisin.statistics.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import tech.kisin.statistics.pojo.VisitorCount;
+import tech.kisin.statistics.po.VisitorCountPO;
 
-public interface VisitorCountRepository extends JpaRepository<VisitorCount, Integer> {
+import java.util.List;
+
+public interface VisitorCountRepository extends JpaRepository<VisitorCountPO, Integer> {
 
     boolean existsByIdentifier(String identifier);
 
-    VisitorCount getByIdentifier(String identifier);
+    VisitorCountPO getByIdentifier(String identifier);
+
+    List<VisitorCountPO> getAllByOrderByIdentifier();
 }

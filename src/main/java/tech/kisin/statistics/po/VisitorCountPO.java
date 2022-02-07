@@ -1,4 +1,4 @@
-package tech.kisin.statistics.pojo;
+package tech.kisin.statistics.po;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "visitor_count")
 @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
-public class VisitorCount {
+public class VisitorCountPO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -15,10 +15,10 @@ public class VisitorCount {
     private String identifier;
     private Integer count;
 
-    public VisitorCount() {
+    public VisitorCountPO() {
     }
 
-    public VisitorCount(String identifier, Integer count) {
+    public VisitorCountPO(String identifier, Integer count) {
         this.identifier = identifier;
         this.count = count;
     }
