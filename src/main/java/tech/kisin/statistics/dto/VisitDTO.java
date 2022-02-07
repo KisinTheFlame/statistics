@@ -1,12 +1,12 @@
 package tech.kisin.statistics.dto;
 
-public class VisitorCountQueryDTO {
+public class VisitDTO {
     private String identifier;
 
-    public VisitorCountQueryDTO() {
+    public VisitDTO() {
     }
 
-    public VisitorCountQueryDTO(String identifier) {
+    public VisitDTO(String identifier) {
         this.identifier = identifier;
     }
 

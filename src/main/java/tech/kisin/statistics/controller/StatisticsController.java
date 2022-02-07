@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tech.kisin.statistics.dto.VisitorCountDTO;
-import tech.kisin.statistics.dto.VisitorCountQueryDTO;
+import tech.kisin.statistics.dto.VisitDTO;
 import tech.kisin.statistics.dto.VisitorRecordDTO;
 import tech.kisin.statistics.service.VisitorService;
 
@@ -21,13 +21,13 @@ public class StatisticsController {
         this.visitorService = visitorService;
     }
 
-    @PostMapping("/get-visitor-count")
-    public Integer getVisitorCount(
+    @PostMapping("/visit-and-get-count")
+    public Integer visit(
             HttpServletRequest request,
             HttpServletResponse response,
-            @RequestBody VisitorCountQueryDTO visitorCountQuery
+            @RequestBody VisitDTO visit
     ) {
-        return visitorService.visit(request, response, visitorCountQuery.getIdentifier());
+        return visitorService.visit(request, response, visit.getIdentifier());
     }
 
     @PostMapping("/get-visitor-count-list")
