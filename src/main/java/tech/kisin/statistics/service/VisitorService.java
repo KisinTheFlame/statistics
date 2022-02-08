@@ -24,7 +24,7 @@ import static tech.kisin.statistics.utils.Utils.getCurrentTimeDatetimeFormat;
 public class VisitorService {
 
     private final String RECENTLY_VISIT_TIME_COOKIE_NAME_PREFIX = "recently-visit-time-for-";
-    private final Integer RECENTLY_VISIT_TIME_COOKIE_MAX_AGE = 5;
+    private final Integer RECENTLY_VISIT_TIME_COOKIE_MAX_AGE = 300;
 
     private final VisitorCountRepository visitorCountRepository;
     private final VisitorRecordRepository visitorRecordRepository;
@@ -42,6 +42,7 @@ public class VisitorService {
                     RECENTLY_VISIT_TIME_COOKIE_NAME_PREFIX + identifier,
                     URLEncoder.encode(getCurrentTimeDashFormat(), StandardCharsets.UTF_8)
             );
+            recentlyVisitTimeCookie.setSecure(true);
             recentlyVisitTimeCookie.setMaxAge(RECENTLY_VISIT_TIME_COOKIE_MAX_AGE);
             response.addCookie(recentlyVisitTimeCookie);
             saveVisitorRecord(request, identifier);
