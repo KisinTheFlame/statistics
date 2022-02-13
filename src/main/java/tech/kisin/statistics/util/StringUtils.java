@@ -1,4 +1,4 @@
-package tech.kisin.statistics.utils;
+package tech.kisin.statistics.util;
 
 import java.security.InvalidParameterException;
 import java.util.Random;

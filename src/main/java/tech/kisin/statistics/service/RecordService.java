@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
-import static tech.kisin.statistics.utils.TimeUtils.getCurrentTimeDashFormat;
-import static tech.kisin.statistics.utils.TimeUtils.getCurrentTimeDatetimeFormat;
+import static tech.kisin.statistics.util.TimeUtils.getCurrentTimeDashFormat;
+import static tech.kisin.statistics.util.TimeUtils.getCurrentTimeDatetimeFormat;
 
 @Service
 public class RecordService {

@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Table(name = "visitor_count")
 public class VisitorCountPO {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String identifier;
@@ -19,10 +20,6 @@ public class VisitorCountPO {
     public VisitorCountPO(String identifier, Integer count) {
         this.identifier = identifier;
         this.count = count;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getIdentifier() {

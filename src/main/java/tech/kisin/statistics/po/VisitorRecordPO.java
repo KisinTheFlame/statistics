@@ -8,7 +8,8 @@ import javax.persistence.*;
 @Table(name = "visitor_record")
 public class VisitorRecordPO {
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private String identifier;
     private String visitTime;
@@ -17,6 +18,7 @@ public class VisitorRecordPO {
     public VisitorRecordPO() {
 
     }
+
     public VisitorRecordPO(String identifier, String visitTime, String remoteIp) {
         this.identifier = identifier;
         this.visitTime = visitTime;
