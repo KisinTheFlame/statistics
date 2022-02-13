@@ -32,9 +32,9 @@ public class RecordService {
         if (isRecentlyVisited(request, identifier)) {
             return getVisitorCount(identifier, false);
         } else {
-            ResponseCookie cookie = ResponseCookie.from(RECENTLY_VISIT_TIME_COOKIE_NAME_PREFIX + identifier, getCurrentTimeDashFormat())
+            ResponseCookie cookie = ResponseCookie
+                    .from(RECENTLY_VISIT_TIME_COOKIE_NAME_PREFIX + identifier, getCurrentTimeDashFormat())
                     .maxAge(60 * 5)
-                    .domain("statistics.kisin.tech")
                     .path("/")
                     .secure(true)
                     .httpOnly(false)

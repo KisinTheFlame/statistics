@@ -1,25 +1,16 @@
 package tech.kisin.statistics.po;
 
-import tech.kisin.statistics.enums.AdministratorRole;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 public class AdministratorPO {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private final String username;
+    private final String password;
+    private final String salt;
 
-    private String username;
-    private String password;
-    private String salt;
-    private String role;
-
-    public AdministratorPO(String username, String password, String salt, AdministratorRole role) {
+    public AdministratorPO(String username, String password, String salt) {
         this.username = username;
         this.password = password;
         this.salt = salt;
-        this.role = role.toString();
     }
 }
