@@ -8,9 +8,11 @@ import tech.kisin.statistics.dao.VisitorRecordRepository;
 import tech.kisin.statistics.po.VisitorCountPO;
 import tech.kisin.statistics.po.VisitorRecordPO;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static tech.kisin.statistics.util.TimeUtils.getCurrentTimeDashFormat;
 import static tech.kisin.statistics.util.TimeUtils.getCurrentTimeDatetimeFormat;
@@ -32,14 +34,7 @@ public class RecordService {
         if (isRecentlyVisited(request, identifier)) {
             return getVisitorCount(identifier, false);
         } else {
-            ResponseCookie cookie = ResponseCookie
-                    .from(RECENTLY_VISIT_TIME_COOKIE_NAME_PREFIX + identifier, getCurrentTimeDashFormat())
-                    .maxAge(60 * 5)
-                    .path("/")
-                    .secure(true)
-                    .httpOnly(false)
-                    .sameSite("None")
-                    .build();
+            ResponseCookie cookie = ResponseCookie.from(RECENTLY_VISIT_TIME_COOKIE_NAME_PREFIX + identifier, getCurrentTimeDashFormat()).maxAge(60 * 5).path("/").secure(true).httpOnly(false).sameSite("None").build();
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
             response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, request.getRemoteHost());
             saveVisitorRecord(request, identifier);
@@ -49,7 +44,12 @@ public class RecordService {
 
     private boolean isRecentlyVisited(HttpServletRequest request, String identifier) {
         if (request.getCookies() == null) return false;
-        return Arrays.stream(request.getCookies()).parallel().reduce(false, (found, cookie) -> found || cookie.getName().equals(RECENTLY_VISIT_TIME_COOKIE_NAME_PREFIX + identifier), (found1, found2) -> found1 || found2);
+        return Arrays
+                .stream(request.getCookies())
+                .parallel()
+                .map(Cookie::getName)
+                .collect(Collectors.toSet())
+                .contains(RECENTLY_VISIT_TIME_COOKIE_NAME_PREFIX + identifier);
     }
 
     private Integer getVisitorCount(String identifier, boolean toModify) {
@@ -67,7 +67,11 @@ public class RecordService {
     }
 
     private void saveVisitorRecord(HttpServletRequest request, String identifier) {
-        VisitorRecordPO visitorRecord = new VisitorRecordPO(identifier, getCurrentTimeDatetimeFormat(), request.getHeader("x-forwarded-for"));
+        VisitorRecordPO visitorRecord = new VisitorRecordPO(
+                identifier,
+                getCurrentTimeDatetimeFormat(),
+                request.getHeader("x-forwarded-for")
+        );
         visitorRecordRepository.save(visitorRecord);
     }
 }

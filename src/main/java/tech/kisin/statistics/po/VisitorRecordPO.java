@@ -6,10 +6,11 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "visitor_record")
+@JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
 public class VisitorRecordPO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     private String identifier;
     private String visitTime;

@@ -6,8 +6,9 @@ public class VisitorCountDTO {
     private String identifier;
     private Integer count;
 
-    public VisitorCountDTO() {
-
+    public VisitorCountDTO(String identifier, Integer count) {
+        this.identifier = identifier;
+        this.count = count;
     }
 
     public VisitorCountDTO(VisitorCountPO visitorCountPO) {

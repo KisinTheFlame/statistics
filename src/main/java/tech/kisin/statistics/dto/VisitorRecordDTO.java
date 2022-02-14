@@ -7,9 +7,6 @@ public class VisitorRecordDTO {
     private String visitTime;
     private String remoteIp;
 
-    public VisitorRecordDTO() {
-    }
-
     public VisitorRecordDTO(String identifier, String visitTime, String remoteIp) {
         this.identifier = identifier;
         this.visitTime = visitTime;
