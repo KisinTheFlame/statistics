@@ -58,12 +58,14 @@ public class RecordService {
             visitorCount = visitorCountRepository.getByIdentifier(identifier);
         } else {
             visitorCount = new VisitorCountPO(identifier, 0);
-        }
-        if (toModify) {
-            visitorCount.setCount(visitorCount.getCount() + 1);
             visitorCountRepository.save(visitorCount);
         }
-        return visitorCount.getCount();
+        if (toModify) {
+            visitorCountRepository.countUp(identifier);
+            return visitorCount.getCount() + 1;
+        } else {
+            return visitorCount.getCount();
+        }
     }
 
     private void saveVisitorRecord(HttpServletRequest request, String identifier) {
