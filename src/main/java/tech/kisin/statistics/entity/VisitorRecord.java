@@ -1,4 +1,4 @@
-package tech.kisin.statistics.po;
+package tech.kisin.statistics.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "visitor_record")
 @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
-public class VisitorRecordPO {
+public class VisitorRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -16,11 +16,11 @@ public class VisitorRecordPO {
     private String visitTime;
     private String remoteIp;
 
-    public VisitorRecordPO() {
+    public VisitorRecord() {
 
     }
 
-    public VisitorRecordPO(String identifier, String visitTime, String remoteIp) {
+    public VisitorRecord(String identifier, String visitTime, String remoteIp) {
         this.identifier = identifier;
         this.visitTime = visitTime;
         this.remoteIp = remoteIp;

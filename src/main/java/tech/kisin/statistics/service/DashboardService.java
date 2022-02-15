@@ -5,7 +5,7 @@ import tech.kisin.statistics.dao.VisitorCountRepository;
 import tech.kisin.statistics.dao.VisitorRecordRepository;
 import tech.kisin.statistics.dto.VisitorCountDTO;
 import tech.kisin.statistics.dto.VisitorRecordDTO;
-import tech.kisin.statistics.po.VisitorRecordPO;
+import tech.kisin.statistics.entity.VisitorRecord;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,12 +26,12 @@ public class DashboardService {
     }
 
     public List<VisitorRecordDTO> getVisitorRecordList(String filterIdentifier) {
-        List<VisitorRecordPO> visitorRecordPOList;
+        List<VisitorRecord> visitorRecordList;
         if (filterIdentifier == null) {
-            visitorRecordPOList = visitorRecordRepository.getAllByOrderByVisitTimeDesc();
+            visitorRecordList = visitorRecordRepository.getAllByOrderByVisitTimeDesc();
         } else {
-            visitorRecordPOList = visitorRecordRepository.getAllByIdentifierOrderByVisitTimeDesc(filterIdentifier);
+            visitorRecordList = visitorRecordRepository.getAllByIdentifierOrderByVisitTimeDesc(filterIdentifier);
         }
-        return visitorRecordPOList.stream().map(VisitorRecordDTO::new).collect(Collectors.toList());
+        return visitorRecordList.stream().map(VisitorRecordDTO::new).collect(Collectors.toList());
     }
 }

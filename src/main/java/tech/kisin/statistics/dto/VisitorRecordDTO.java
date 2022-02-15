@@ -1,6 +1,6 @@
 package tech.kisin.statistics.dto;
 
-import tech.kisin.statistics.po.VisitorRecordPO;
+import tech.kisin.statistics.entity.VisitorRecord;
 
 public class VisitorRecordDTO {
     private String identifier;
@@ -13,10 +13,10 @@ public class VisitorRecordDTO {
         this.remoteIp = remoteIp;
     }
 
-    public VisitorRecordDTO(VisitorRecordPO visitorRecordPO) {
-        this.identifier = visitorRecordPO.getIdentifier();
-        this.visitTime = visitorRecordPO.getVisitTime();
-        this.remoteIp = visitorRecordPO.getRemoteIp();
+    public VisitorRecordDTO(VisitorRecord visitorRecord) {
+        this.identifier = visitorRecord.getIdentifier();
+        this.visitTime = visitorRecord.getVisitTime();
+        this.remoteIp = visitorRecord.getRemoteIp();
     }
 
     public String getIdentifier() {

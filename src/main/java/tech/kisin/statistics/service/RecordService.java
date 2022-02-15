@@ -5,8 +5,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import tech.kisin.statistics.dao.VisitorCountRepository;
 import tech.kisin.statistics.dao.VisitorRecordRepository;
-import tech.kisin.statistics.po.VisitorCountPO;
-import tech.kisin.statistics.po.VisitorRecordPO;
+import tech.kisin.statistics.entity.VisitorCount;
+import tech.kisin.statistics.entity.VisitorRecord;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -53,11 +53,11 @@ public class RecordService {
     }
 
     private Integer getVisitorCount(String identifier, boolean toModify) {
-        VisitorCountPO visitorCount;
+        VisitorCount visitorCount;
         if (visitorCountRepository.existsByIdentifier(identifier)) {
             visitorCount = visitorCountRepository.getByIdentifier(identifier);
         } else {
-            visitorCount = new VisitorCountPO(identifier, 0);
+            visitorCount = new VisitorCount(identifier, 0);
             visitorCountRepository.save(visitorCount);
         }
         if (toModify) {
@@ -69,7 +69,7 @@ public class RecordService {
     }
 
     private void saveVisitorRecord(HttpServletRequest request, String identifier) {
-        VisitorRecordPO visitorRecord = new VisitorRecordPO(
+        VisitorRecord visitorRecord = new VisitorRecord(
                 identifier,
                 getCurrentTimeDatetimeFormat(),
                 request.getHeader("x-forwarded-for")

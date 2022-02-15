@@ -1,6 +1,6 @@
 package tech.kisin.statistics.dto;
 
-import tech.kisin.statistics.po.VisitorCountPO;
+import tech.kisin.statistics.entity.VisitorCount;
 
 public class VisitorCountDTO {
     private String identifier;
@@ -11,9 +11,9 @@ public class VisitorCountDTO {
         this.count = count;
     }
 
-    public VisitorCountDTO(VisitorCountPO visitorCountPO) {
-        this.identifier = visitorCountPO.getIdentifier();
-        this.count = visitorCountPO.getCount();
+    public VisitorCountDTO(VisitorCount visitorCount) {
+        this.identifier = visitorCount.getIdentifier();
+        this.count = visitorCount.getCount();
     }
 
     public String getIdentifier() {

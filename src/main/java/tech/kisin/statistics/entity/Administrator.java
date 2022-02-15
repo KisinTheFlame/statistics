@@ -1,10 +1,10 @@
-package tech.kisin.statistics.po;
+package tech.kisin.statistics.entity;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "administrator")
-public class AdministratorPO {
+public class Administrator {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -13,11 +13,11 @@ public class AdministratorPO {
     private String password;
     private String salt;
 
-    public AdministratorPO() {
+    public Administrator() {
 
     }
 
-    public AdministratorPO(String username, String password, String salt) {
+    public Administrator(String username, String password, String salt) {
         this.username = username;
         this.password = password;
         this.salt = salt;
