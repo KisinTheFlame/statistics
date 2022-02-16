@@ -79,10 +79,14 @@ public class RecordService {
     }
 
     private void saveVisitorRecord(HttpServletRequest request, String identifier) {
+        String remoteIp =
+                request.getHeader("x-forwarded-for") != null ?
+                        request.getHeader("x-forwarded-for") :
+                        request.getRemoteHost();
         VisitorRecord visitorRecord = new VisitorRecord(
                 identifier,
                 getCurrentTimeDatetimeFormat(),
-                request.getHeader("x-forwarded-for")
+                remoteIp
         );
         visitorRecordRepository.save(visitorRecord);
     }
