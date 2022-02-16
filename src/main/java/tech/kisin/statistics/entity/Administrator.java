@@ -12,15 +12,17 @@ public class Administrator {
     private String username;
     private String password;
     private String salt;
+    private String token;
 
     public Administrator() {
 
     }
 
-    public Administrator(String username, String password, String salt) {
+    public Administrator(String username, String password, String salt, String token) {
         this.username = username;
         this.password = password;
         this.salt = salt;
+        this.token = token;
     }
 
     public Integer getId() {
@@ -53,5 +55,13 @@ public class Administrator {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

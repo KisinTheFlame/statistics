@@ -2,12 +2,16 @@ package tech.kisin.statistics.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-public class PasswordUtils {
+public class SecurityUtils {
     public static String generateSalt() {
         return StringUtils.getRandomString(128);
     }
 
     public static String generateHashedPassword(String password, String salt) {
         return DigestUtils.sha256Hex(password + salt);
+    }
+
+    public static String generateToken() {
+        return StringUtils.getRandomString(128);
     }
 }
