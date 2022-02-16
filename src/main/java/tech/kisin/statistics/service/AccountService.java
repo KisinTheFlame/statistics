@@ -32,19 +32,8 @@ public class AccountService {
             HttpServletResponse response,
             LoginCertificateDTO certificate
     ) {
-        if (
-                request.getCookies() != null &&
-                        Arrays
-                                .stream(request.getCookies())
-                                .map(Cookie::getName)
-                                .anyMatch(name -> name.equals(TOKEN_COOKIE_NAME))
-        ) {
-            return new Result<>(ResultCode.USER_HAS_LOGGED_IN, false);
-        }
-
-        if (certificate.getUsername() == null || certificate.getUsername().equals("")) {
-            return new Result<>(ResultCode.PARAM_IS_BLANK, false);
-        }
+        Result<Boolean> failureResult = commonCheck(request, certificate);
+        if (failureResult != null) return failureResult;
 
         if (administratorRepository.existsByUsername(certificate.getUsername())) {
             return new Result<>(ResultCode.USER_USERNAME_EXISTING, false);
@@ -69,6 +58,27 @@ public class AccountService {
             HttpServletResponse response,
             LoginCertificateDTO certificate
     ) {
+        Result<Boolean> failureResult = commonCheck(request, certificate);
+        if (failureResult != null) return failureResult;
+
+        if (!administratorRepository.existsByUsername(certificate.getUsername())) {
+            return new Result<>(ResultCode.USER_NONEXISTENT, false);
+        }
+
+        Administrator administrator = administratorRepository.getByUsername(certificate.getUsername());
+        if (
+                !administrator.getPassword().equals(
+                        generateHashedPassword(certificate.getPassword(), administrator.getSalt())
+                )
+        ) {
+            return new Result<>(ResultCode.USER_PASSWORD_INCORRECT, false);
+        }
+
+        addTokenIntoCookie(response, administrator.getToken());
+        return new Result<>(ResultCode.SUCCESS, true);
+    }
+
+    private Result<Boolean> commonCheck(HttpServletRequest request, LoginCertificateDTO certificate) {
         if (
                 request.getCookies() != null &&
                         Arrays
@@ -81,18 +91,7 @@ public class AccountService {
         if (certificate.getUsername() == null || certificate.getUsername().equals("")) {
             return new Result<>(ResultCode.PARAM_IS_BLANK, false);
         }
-
-        if (!administratorRepository.existsByUsername(certificate.getUsername())) {
-            return new Result<>(ResultCode.USER_NONEXISTENT, false);
-        }
-
-        Administrator administrator = administratorRepository.getByUsername(certificate.getUsername());
-        if (!administrator.getPassword().equals(generateHashedPassword(certificate.getPassword(), administrator.getSalt()))) {
-            return new Result<>(ResultCode.USER_PASSWORD_INCORRECT, false);
-        }
-
-        addTokenIntoCookie(response, administrator.getToken());
-        return new Result<>(ResultCode.SUCCESS, true);
+        return null;
     }
 
     private void addTokenIntoCookie(HttpServletResponse response, String token) {
