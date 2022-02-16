@@ -34,7 +34,17 @@ public class RecordService {
         if (isRecentlyVisited(request, identifier)) {
             return getVisitorCount(identifier, false);
         } else {
-            ResponseCookie cookie = ResponseCookie.from(RECENTLY_VISIT_TIME_COOKIE_NAME_PREFIX + identifier, getCurrentTimeDashFormat()).maxAge(60 * 5).path("/").secure(true).httpOnly(false).sameSite("None").build();
+            ResponseCookie cookie = ResponseCookie
+                    .from(
+                            RECENTLY_VISIT_TIME_COOKIE_NAME_PREFIX + identifier,
+                            getCurrentTimeDashFormat()
+                    )
+                    .maxAge(60 * 5)
+                    .path("/")
+                    .secure(true)
+                    .httpOnly(false)
+                    .sameSite("None")
+                    .build();
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
             response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, request.getRemoteHost());
             saveVisitorRecord(request, identifier);
