@@ -2,6 +2,7 @@ package tech.kisin.statistics.service;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.stereotype.Service;
 import tech.kisin.statistics.dao.AdministratorRepository;
 import tech.kisin.statistics.dto.LoginCertificateDTO;
 import tech.kisin.statistics.entity.Administrator;
@@ -15,13 +16,14 @@ import java.util.Arrays;
 
 import static tech.kisin.statistics.util.SecurityUtils.*;
 
-public class LoginService {
+@Service
+public class AccountService {
 
     private final String TOKEN_COOKIE_NAME = "token";
 
     private final AdministratorRepository administratorRepository;
 
-    public LoginService(AdministratorRepository administratorRepository) {
+    public AccountService(AdministratorRepository administratorRepository) {
         this.administratorRepository = administratorRepository;
     }
 
