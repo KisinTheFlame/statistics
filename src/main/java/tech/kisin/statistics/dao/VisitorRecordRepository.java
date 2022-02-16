@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface VisitorRecordRepository extends JpaRepository<VisitorRecord, Integer> {
     List<VisitorRecord> getAllByOrderByVisitTimeDesc();
+
     List<VisitorRecord> getAllByIdentifierOrderByVisitTimeDesc(String identifier);
 }

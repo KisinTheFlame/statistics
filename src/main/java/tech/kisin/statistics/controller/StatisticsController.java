@@ -39,17 +39,21 @@ public class StatisticsController {
     }
 
     @PostMapping("/get-visitor-count-list")
-    public Result<List<VisitorCountDTO>> getVisitorCountList() {
-        return new Result<>(ResultCode.SUCCESS, dashboardService.getVisitorCountList());
+    public Result<List<VisitorCountDTO>> getVisitorCountList(HttpServletRequest request, HttpServletResponse response) {
+        return dashboardService.getVisitorCountList(request, response);
     }
 
     @PostMapping("/get-visitor-record-list")
-    public Result<List<VisitorRecordDTO>> getVisitorRecordList() {
-        return new Result<>(ResultCode.SUCCESS, dashboardService.getVisitorRecordList(null));
+    public Result<List<VisitorRecordDTO>> getVisitorRecordList(HttpServletRequest request, HttpServletResponse response) {
+        return dashboardService.getVisitorRecordList(request, response, null);
     }
 
     @PostMapping("/get-visitor-record-list-filtered/{identifier}")
-    public Result<List<VisitorRecordDTO>> getVisitorRecordListFiltered(@PathVariable("identifier") String identifier) {
-        return new Result<>(ResultCode.SUCCESS, dashboardService.getVisitorRecordList(identifier));
+    public Result<List<VisitorRecordDTO>> getVisitorRecordListFiltered(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @PathVariable("identifier") String identifier
+    ) {
+        return dashboardService.getVisitorRecordList(request, response, identifier);
     }
 }

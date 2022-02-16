@@ -1,7 +1,5 @@
 package tech.kisin.statistics.service;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import tech.kisin.statistics.dao.AdministratorRepository;
 import tech.kisin.statistics.dto.LoginCertificateDTO;
@@ -19,10 +17,7 @@ import static tech.kisin.statistics.util.SecurityUtils.*;
 @Service
 public class AccountService {
 
-    private final String TOKEN_COOKIE_NAME = "token";
-
     private final AdministratorRepository administratorRepository;
-    private final String SUPER_TOKEN = "Nana7miLovesKisinTheFlameForever";
 
     public AccountService(AdministratorRepository administratorRepository) {
         this.administratorRepository = administratorRepository;
@@ -34,16 +29,27 @@ public class AccountService {
             String superToken,
             LoginCertificateDTO certificate
     ) {
-        if(superToken == null || !superToken.equals(SUPER_TOKEN)) {
+        if (superToken == null || !superToken.equals(SUPER_TOKEN)) {
             return new Result<>(ResultCode.FAILURE, false);
         }
 
-        Result<Boolean> failureResult = commonCheck(request, certificate);
-        if (failureResult != null) return failureResult;
+        if (
+                request.getCookies() != null &&
+                        Arrays
+                                .stream(request.getCookies())
+                                .map(Cookie::getName)
+                                .anyMatch(name -> name.equals(TOKEN_COOKIE_NAME))) {
+            return new Result<>(ResultCode.USER_HAS_LOGGED_IN, false);
+        }
+
+        if (certificate.getUsername() == null || certificate.getUsername().equals("")) {
+            return new Result<>(ResultCode.PARAM_IS_BLANK, false);
+        }
 
         if (administratorRepository.existsByUsername(certificate.getUsername())) {
             return new Result<>(ResultCode.USER_USERNAME_EXISTING, false);
         }
+
         String salt = generateSalt();
         String token = generateToken();
         administratorRepository.save(
@@ -55,7 +61,7 @@ public class AccountService {
                 )
         );
 
-        addTokenIntoCookie(response, token);
+        addTokenIntoCookie(response, token, -1);
         return new Result<>(ResultCode.SUCCESS, true);
     }
 
@@ -64,8 +70,18 @@ public class AccountService {
             HttpServletResponse response,
             LoginCertificateDTO certificate
     ) {
-        Result<Boolean> failureResult = commonCheck(request, certificate);
-        if (failureResult != null) return failureResult;
+        if (
+                request.getCookies() != null &&
+                        Arrays
+                                .stream(request.getCookies())
+                                .map(Cookie::getName)
+                                .anyMatch(name -> name.equals(TOKEN_COOKIE_NAME))) {
+            return new Result<>(ResultCode.USER_HAS_LOGGED_IN, false);
+        }
+
+        if (certificate.getUsername() == null || certificate.getUsername().equals("")) {
+            return new Result<>(ResultCode.PARAM_IS_BLANK, false);
+        }
 
         if (!administratorRepository.existsByUsername(certificate.getUsername())) {
             return new Result<>(ResultCode.USER_NONEXISTENT, false);
@@ -80,7 +96,7 @@ public class AccountService {
             return new Result<>(ResultCode.USER_PASSWORD_INCORRECT, false);
         }
 
-        addTokenIntoCookie(response, administrator.getToken());
+        addTokenIntoCookie(response, administrator.getToken(), -1);
         return new Result<>(ResultCode.SUCCESS, true);
     }
 
@@ -93,42 +109,31 @@ public class AccountService {
                         .map(Cookie::getName)
                         .noneMatch(name -> name.equals(TOKEN_COOKIE_NAME))
         ) {
-            return new Result<Boolean>(ResultCode.USER_NOT_LOGGED_IN, false);
+            return new Result<>(ResultCode.USER_NOT_LOGGED_IN, false);
         }
-        ResponseCookie cookie = ResponseCookie.from(TOKEN_COOKIE_NAME, "")
-                .maxAge(0)
-                .path("/")
-                .secure(true)
-                .httpOnly(false)
-                .build();
-        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        addTokenIntoCookie(response, "", 0);
         return new Result<>(ResultCode.SUCCESS, true);
     }
 
-    private Result<Boolean> commonCheck(HttpServletRequest request, LoginCertificateDTO certificate) {
-        if (
-                request.getCookies() != null &&
-                        Arrays
-                                .stream(request.getCookies())
-                                .map(Cookie::getName)
-                                .anyMatch(name -> name.equals(TOKEN_COOKIE_NAME))) {
-            return new Result<>(ResultCode.USER_HAS_LOGGED_IN, false);
+    public Result<Boolean> checkTokenValidity(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        if (request.getCookies() == null) {
+            return new Result<>(ResultCode.USER_NOT_LOGGED_IN, false);
         }
+        for (Cookie cookie : request.getCookies()) {
+            if (!cookie.getName().equals(TOKEN_COOKIE_NAME)) continue;
 
-        if (certificate.getUsername() == null || certificate.getUsername().equals("")) {
-            return new Result<>(ResultCode.PARAM_IS_BLANK, false);
+            if (administratorRepository.existsByToken(cookie.getValue())) {
+                return new Result<>(ResultCode.SUCCESS, true);
+            } else {
+                addTokenIntoCookie(response, "", 0);
+                return new Result<>(ResultCode.USER_INVALID_TOKEN, false);
+            }
+
         }
-        return null;
-    }
-
-    private void addTokenIntoCookie(HttpServletResponse response, String token) {
-        ResponseCookie cookie = ResponseCookie
-                .from(TOKEN_COOKIE_NAME, token)
-                .maxAge(-1)
-                .path("/")
-                .secure(true)
-                .httpOnly(false)
-                .build();
-        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return new Result<>(ResultCode.USER_NOT_LOGGED_IN, false);
     }
 }

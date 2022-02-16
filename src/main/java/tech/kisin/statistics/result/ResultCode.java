@@ -18,7 +18,8 @@ public enum ResultCode {
     USER_USERNAME_EXISTING(2004,"用户名已存在"),
     USER_USERNAME_MISSING(2005,"请输入用户名"),
     USER_PASSWORD_INCORRECT(2006,"密码不正确"),
-    USER_PASSWORD_MISSING(2007,"请输入密码");
+    USER_PASSWORD_MISSING(2007,"请输入密码"),
+    USER_INVALID_TOKEN(2008, "登录凭证无效");
 
     private final int code;
     private final String message;

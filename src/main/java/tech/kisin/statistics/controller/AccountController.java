@@ -24,7 +24,7 @@ public class AccountController {
     public Result<Boolean> register(
             HttpServletRequest request,
             HttpServletResponse response,
-            @RequestParam String superToken,
+            @RequestParam("super-token") String superToken,
             @RequestBody LoginCertificateDTO loginCertificateDTO
     ) {
         return accountService.register(request, response, superToken, loginCertificateDTO);
@@ -45,5 +45,13 @@ public class AccountController {
             HttpServletResponse response
     ) {
         return accountService.logout(request, response);
+    }
+
+    @PostMapping("/check-token-validity")
+    public Result<Boolean> checkTokenValidity(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        return accountService.checkTokenValidity(request, response);
     }
 }
