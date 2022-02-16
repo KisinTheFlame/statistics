@@ -32,10 +32,12 @@ public class AccountService {
             HttpServletResponse response,
             LoginCertificateDTO certificate
     ) {
-        if (Arrays
-                .stream(request.getCookies())
-                .map(Cookie::getName)
-                .anyMatch(name -> name.equals(TOKEN_COOKIE_NAME))
+        if (
+                request.getCookies() != null &&
+                        Arrays
+                                .stream(request.getCookies())
+                                .map(Cookie::getName)
+                                .anyMatch(name -> name.equals(TOKEN_COOKIE_NAME))
         ) {
             return new Result<>(ResultCode.USER_HAS_LOGGED_IN, false);
         }
@@ -67,11 +69,12 @@ public class AccountService {
             HttpServletResponse response,
             LoginCertificateDTO certificate
     ) {
-        if (Arrays
-                .stream(request.getCookies())
-                .map(Cookie::getName)
-                .anyMatch(name -> name.equals(TOKEN_COOKIE_NAME))
-        ) {
+        if (
+                request.getCookies() != null &&
+                        Arrays
+                                .stream(request.getCookies())
+                                .map(Cookie::getName)
+                                .anyMatch(name -> name.equals(TOKEN_COOKIE_NAME))) {
             return new Result<>(ResultCode.USER_HAS_LOGGED_IN, false);
         }
 
