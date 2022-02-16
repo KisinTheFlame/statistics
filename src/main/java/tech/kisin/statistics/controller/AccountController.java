@@ -2,6 +2,7 @@ package tech.kisin.statistics.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tech.kisin.statistics.dto.LoginCertificateDTO;
 import tech.kisin.statistics.result.Result;
@@ -23,9 +24,10 @@ public class AccountController {
     public Result<Boolean> register(
             HttpServletRequest request,
             HttpServletResponse response,
+            @RequestParam String superToken,
             @RequestBody LoginCertificateDTO loginCertificateDTO
     ) {
-        return accountService.register(request, response, loginCertificateDTO);
+        return accountService.register(request, response, superToken, loginCertificateDTO);
     }
 
     @PostMapping("/login")
@@ -35,5 +37,13 @@ public class AccountController {
             @RequestBody LoginCertificateDTO loginCertificateDTO
     ) {
         return accountService.login(request, response, loginCertificateDTO);
+    }
+
+    @PostMapping("/logout")
+    public Result<Boolean> logout(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        return accountService.logout(request, response);
     }
 }

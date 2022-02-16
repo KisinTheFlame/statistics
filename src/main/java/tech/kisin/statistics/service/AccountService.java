@@ -22,6 +22,7 @@ public class AccountService {
     private final String TOKEN_COOKIE_NAME = "token";
 
     private final AdministratorRepository administratorRepository;
+    private final String SUPER_TOKEN = "Nana7miLovesKisinTheFlameForever";
 
     public AccountService(AdministratorRepository administratorRepository) {
         this.administratorRepository = administratorRepository;
@@ -30,8 +31,13 @@ public class AccountService {
     public Result<Boolean> register(
             HttpServletRequest request,
             HttpServletResponse response,
+            String superToken,
             LoginCertificateDTO certificate
     ) {
+        if(superToken == null || !superToken.equals(SUPER_TOKEN)) {
+            return new Result<>(ResultCode.FAILURE, false);
+        }
+
         Result<Boolean> failureResult = commonCheck(request, certificate);
         if (failureResult != null) return failureResult;
 
@@ -75,6 +81,27 @@ public class AccountService {
         }
 
         addTokenIntoCookie(response, administrator.getToken());
+        return new Result<>(ResultCode.SUCCESS, true);
+    }
+
+    public Result<Boolean> logout(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        if (request.getCookies() == null ||
+                Arrays.stream(request.getCookies())
+                        .map(Cookie::getName)
+                        .noneMatch(name -> name.equals(TOKEN_COOKIE_NAME))
+        ) {
+            return new Result<Boolean>(ResultCode.USER_NOT_LOGGED_IN, false);
+        }
+        ResponseCookie cookie = ResponseCookie.from(TOKEN_COOKIE_NAME, "")
+                .maxAge(0)
+                .path("/")
+                .secure(true)
+                .httpOnly(false)
+                .build();
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return new Result<>(ResultCode.SUCCESS, true);
     }
 
